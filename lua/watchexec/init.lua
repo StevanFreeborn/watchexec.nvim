@@ -1,7 +1,7 @@
 local M = {}
 
 M.config = {
-  greeting = "Hello from my plugin"
+  greeting = "Hello from my plugin",
 }
 
 function M.setup(opts)

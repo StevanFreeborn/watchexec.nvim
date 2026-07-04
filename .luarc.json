@@ -1,13 +1,27 @@
 {
+  "$schema": "https://raw.githubusercontent.com/sumneko/vscode-lua/master/setting/schema.json",
   "compiler": {
     "verbosity": "Information"
   },
+  "diagnostics": {
+    "globals": [
+      "vim",
+      "describe",
+      "it",
+      "before_each",
+      "after_each",
+      "assert"
+    ]
+  },
   "workspace": {
+    "checkThirdParty": false,
     "library": [
       "$VIMRUNTIME/lua",
       "${3rd}/luv/library",
       "./.tests/vendor/plenary.nvim" 
     ]
-  }
+  },
+  "diagnostics.disable": [
+    "undefined-field"
+  ]
 }
-
