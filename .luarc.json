@@ -1,0 +1,13 @@
+{
+  "compiler": {
+    "verbosity": "Information"
+  },
+  "workspace": {
+    "library": [
+      "$VIMRUNTIME/lua",
+      "${3rd}/luv/library",
+      "./.tests/vendor/plenary.nvim" 
+    ]
+  }
+}
+
