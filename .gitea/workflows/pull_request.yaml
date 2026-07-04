@@ -1,0 +1,35 @@
+name: Pull Request Checks
+on:
+  pull_request:
+    branches: [main]
+jobs:
+  checks:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+      - name: Install stylua
+        run: |
+          curl -L -o stylua.zip https://github.com/JohnnyMorganz/StyLua/releases/latest/download/stylua-linux-x86_64.zip
+          unzip -o stylua.zip
+          chmod +x stylua
+          mv stylua /usr/local/bin/
+      - name: Install lua-language-server
+        run: |
+          LUA_LS_URL=$(curl -s https://api.github.com/repos/LuaLS/lua-language-server/releases/latest \
+            | grep '"browser_download_url".*linux-x64' \
+            | sed 's/.*"\(.*\)".*/\1/')
+          curl -L -o /tmp/lua-ls.tar.gz "$LUA_LS_URL"
+          mkdir -p /usr/local/lib/lua-language-server
+          tar -xzf /tmp/lua-ls.tar.gz -C /usr/local/lib/lua-language-server
+          ln -s /usr/local/lib/lua-language-server/bin/lua-language-server /usr/local/bin/lua-language-server
+      - name: Install neovim
+        run: |
+          curl -L -o /tmp/nvim.tar.gz https://github.com/neovim/neovim/releases/latest/download/nvim-linux-x86_64.tar.gz
+          tar -xzf /tmp/nvim.tar.gz -C /usr/local --strip-components=1
+      - name: Format check
+        run: stylua --check .
+      - name: Lint
+        run: lua-language-server --check=.
+      - name: Test
+        run: nvim --headless -c "PlenaryBustedDirectory tests/watchexec/ {minimal_init = 'tests/minimal_init.lua'}" -c "q"
