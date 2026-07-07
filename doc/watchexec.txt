@@ -1,0 +1,273 @@
+*watchexec.nvim* Integrate the watchexec CLI into Neovim.
+
+==============================================================================
+CONTENTS                                                    *watchexec-contents*
+
+  1. Introduction ................................ |watchexec-introduction|
+  2. Requirements ................................ |watchexec-requirements|
+  3. Installation ................................ |watchexec-installation|
+  4. Setup ....................................... |watchexec-setup|
+  5. Configuration .............................. |watchexec-config|
+  6. Commands ................................... |watchexec-commands|
+  7. Keymaps .................................... |watchexec-keymaps|
+  8. Highlight Groups ........................... |watchexec-highlights|
+  9. API ........................................ |watchexec-api|
+
+==============================================================================
+1. INTRODUCTION                                         *watchexec-introduction*
+
+watchexec.nvim integrates the watchexec CLI into Neovim, providing a floating
+or split output window for displaying file-watching command output. It also
+includes a status indicator that shows the last command outcome (success or
+failure) when the output window is hidden, and highlights relevant keywords
+(Error, Warning, Success) in the output buffer.
+
+==============================================================================
+2. REQUIREMENTS                                       *watchexec-requirements*
+
+  - Neovim >= 0.10.
+  - watchexec CLI: https://github.com/watchexec/watchexec
+    Install via cargo: `cargo install watchexec`
+
+==============================================================================
+3. INSTALLATION                                       *watchexec-installation*
+
+lazy.nvim~
+>lua
+  {
+    "stevanfreeborn/watchexec.nvim",
+    opts = {},
+  }
+<
+
+packer.nvim~
+>lua
+  use {
+    "stevanfreeborn/watchexec.nvim",
+    config = function()
+      require("watchexec").setup({})
+    end,
+  }
+<
+
+vim-plug~
+>vim
+  Plug 'stevanfreeborn/watchexec.nvim'
+  lua require("watchexec").setup({})
+<
+
+==============================================================================
+4. SETUP                                                      *watchexec-setup*
+
+Call `setup()` in your init.lua with an optional configuration table:
+
+>lua
+  require("watchexec").setup({
+    auto_scroll = false,
+    max_lines = 1000,
+    watchexec = {
+      bin = "watchexec",
+      args = { "--shell", "bash" },
+    },
+    window = {
+      type = "split",
+      split = "below",
+      size = 15,
+    },
+    indicator = {
+      enabled = true,
+      position = "bottom-right",
+    },
+  })
+<
+
+Without calling `setup()`, the plugin uses all default values.
+
+==============================================================================
+5. CONFIGURATION                                           *watchexec-config*
+
+The `setup()` function accepts an optional table |watchexec.Config|.
+
+                                                          *watchexec.Config*
+watchexec (table|nil) ~
+                                     *watchexec.Config.watchexec*
+  Options for the watchexec binary.
+
+  bin (string|nil) ~
+    Path to the watchexec executable. Auto-detected from PATH and candidate
+    locations (e.g. ~/.cargo/bin/watchexec).
+    Default: "watchexec"
+
+  args (string[]|nil) ~
+    Extra arguments passed to the watchexec binary before the user command.
+    Default: {}
+
+window (table|nil) ~
+                                       *watchexec.Config.window*
+  Options for the output window.
+
+  type ("float"|"split"|nil) ~
+    Window type: "float" for a floating window, "split" for a split.
+    Default: "float"
+
+  split ("below"|"above"|"left"|"right"|nil) ~
+    Split direction. Only used when `type` is "split".
+    Default: "below"
+
+  size (integer|nil) ~
+    Height (for horizontal splits) or width (for vertical splits) in rows or
+    columns.
+    Default: 12
+
+  border (string|string[]|nil) ~
+    Border style for floating windows. See |nvim_open_win()|.
+    Default: "single"
+
+  float (table|nil) ~
+    Geometry for the floating window.
+                                       *watchexec.Config.window.float*
+    relative (string|nil) ~
+      Positioning relative to. See |nvim_open_win()|.
+      Default: "editor"
+
+    width (number|nil) ~
+      Width in columns. Values <= 1 are interpreted as a fraction of the
+      editor width.
+      Default: 0.8
+
+    height (number|nil) ~
+      Height in rows. Values <= 1 are interpreted as a fraction of the
+      editor height.
+      Default: 0.6
+
+    row (number|nil) ~
+      Row position. Values <= 1 are interpreted as a fraction.
+      Default: 0.5
+
+    col (number|nil) ~
+      Column position. Values <= 1 are interpreted as a fraction.
+      Default: 0.5
+
+indicator (table|nil) ~
+                                     *watchexec.Config.indicator*
+  Options for the status indicator, a small non-focusable float that appears
+  when the main window is hidden to show the last command outcome.
+
+  enabled (boolean|nil) ~
+    Enable or disable the indicator entirely.
+    Default: true
+
+  position ("bottom-left"|"bottom-right"|"top-left"|"top-right"|nil) ~
+    Screen corner where the indicator appears.
+    Default: "bottom-right"
+
+  success_hl (string|nil) ~
+    Highlight group for the success state.
+    Default: "WatchexecSuccess"
+
+  failure_hl (string|nil) ~
+    Highlight group for the failure state.
+    Default: "WatchexecFailure"
+
+  width (integer|nil) ~
+    Width of the indicator in screen cells.
+    Default: 2
+
+  height (integer|nil) ~
+    Height of the indicator in screen cells.
+    Default: 1
+
+  patterns (table|nil) ~
+    Lua patterns for detecting command lifecycle in output.
+                                   *watchexec.Config.indicator.patterns*
+    success (string|nil) ~
+      Pattern that signals a successful command completion.
+      Default: "%[Command was successful%]"
+
+    running (string|nil) ~
+      Pattern that signals a command started running.
+      Default: "%[Running"
+
+auto_scroll (boolean|nil) ~
+                               *watchexec.Config.auto_scroll*
+  When true, scrolls the output window to the bottom on each new line.
+  Default: true
+
+max_lines (integer|nil) ~
+                               *watchexec.Config.max_lines*
+  Maximum number of lines kept in the output buffer. Oldest lines are trimmed
+  when exceeded.
+  Default: 5000
+
+==============================================================================
+6. COMMANDS                                              *watchexec-commands*
+
+:WatchexecRun {command} ~                                 *:WatchexecRun*
+  Start watchexec with the given shell command. Stops any previously running
+  process, opens the output window, and begins watching.
+
+:WatchexecStop ~                                           *:WatchexecStop*
+  Stop the currently running watchexec process and clear the output window.
+
+:WatchexecToggle ~                                       *:WatchexecToggle*
+  Toggle the watchexec output window. If a process is running and the window
+  is hidden, shows it. If visible, hides it. If no process is running, opens
+  or closes the window with a placeholder message.
+
+==============================================================================
+7. KEYMAPS                                                *watchexec-keymaps*
+
+<Leader>wxt ~                                              *watchexec-wxt*
+  Toggle the watchexec output window. Same as |:WatchexecToggle|.
+
+<Leader>wxs ~                                              *watchexec-wxs*
+  Stop the currently running watchexec process. Same as |:WatchexecStop|.
+
+<Leader>wxr ~                                              *watchexec-wxr*
+  Prompt for a shell command via |input()| and run it under watchexec. Same as
+  |:WatchexecRun|.
+
+==============================================================================
+8. HIGHLIGHT GROUPS                                   *watchexec-highlights*
+
+These groups are defined by the plugin and can be customized by linking or
+overriding them in your colorscheme.
+
+                                                       *hl-WatchexecSuccess*
+WatchexecSuccess ~
+  Background highlight for the indicator when the last command succeeded.
+  Default: `guibg=#00ff00`
+
+                                                       *hl-WatchexecFailure*
+WatchexecFailure ~
+  Background highlight for the indicator when the last command failed.
+  Default: `guibg=#ff0000`
+
+The runner also applies built-in diagnostic highlights to output lines:
+
+  |hl-DiagnosticError| ~ Matches error, fail, fatal keywords (case-insensitive)
+  |hl-DiagnosticWarn| ~  Matches warn keywords
+  |hl-DiagnosticOk| ~    Matches success, passed, ok keywords
+
+==============================================================================
+9. API                                                          *watchexec-api*
+
+require("watchexec").setup({opts}) ~                          *watchexec.setup*
+  Configure the plugin with |watchexec.Config|. Must be called before using
+  other functions.
+
+require("watchexec").run({command}) ~                          *watchexec.run*
+  Start a watchexec process for the given shell command. Stops any previous
+  process and opens the output window if hidden.
+
+require("watchexec").stop() ~                                  *watchexec.stop*
+  Stop the currently running watchexec process, clear the output, and reset
+  the indicator.
+
+require("watchexec").toggle() ~                              *watchexec.toggle*
+  Toggle the output window. Behaviour depends on whether a process is
+  running and whether the window is currently visible (see |:WatchexecToggle|
+  for details).
+
+==============================================================================
+ vim:tw=78:ts=8:ft=help:norl:
