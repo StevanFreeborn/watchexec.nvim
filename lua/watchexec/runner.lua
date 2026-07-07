@@ -54,7 +54,6 @@ local function apply_highlights(buf, line_idx, line)
     { p = "%[ok%]", h = "DiagnosticOk" },
     { p = "[Oo][Kk]!", h = "DiagnosticOk" },
   }) do
-
     local s, e = line:find(p.p)
 
     if s then
