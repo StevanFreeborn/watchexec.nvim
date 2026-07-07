@@ -2,8 +2,11 @@ local health = require("watchexec.health")
 local stub = require("luassert.stub")
 
 describe("watchexec healthcheck", function()
-  local start_stub, ok_stub, error_stub
-  local has_stub, exec_stub
+  local start_stub
+  local ok_stub
+  local error_stub
+  local has_stub
+  local exec_stub
 
   before_each(function()
     start_stub = stub(vim.health, "start")
@@ -29,6 +32,7 @@ describe("watchexec healthcheck", function()
     has_stub = stub(vim.fn, "has", function()
       return 1
     end)
+
     exec_stub = stub(vim.fn, "executable", function()
       return 1
     end)
@@ -44,6 +48,7 @@ describe("watchexec healthcheck", function()
     has_stub = stub(vim.fn, "has", function()
       return 1
     end)
+
     exec_stub = stub(vim.fn, "executable", function()
       return 0
     end)
