@@ -110,7 +110,7 @@ to close it. Press `<Leader>wxt` to toggle it back.
 | `failure_hl` | `string`                                                          | `"WatchexecFailure"` | Highlight for failure state.     |
 | `width`      | `integer`                                                         | `2`                  | Indicator width in cells.        |
 | `height`     | `integer`                                                         | `1`                  | Indicator height in cells.       |
-| `padding`    | `table`                                                           | `{ x = 1, y = 3 }`  | Offset from editor edges.        |
+| `padding`    | `table`                                                           | `{ x = 1, y = 3 }`   | Offset from editor edges.        |
 | `patterns`   | `table`                                                           | *(see below)*        | Lua patterns for parsing output. |
 
 #### `indicator.patterns`
