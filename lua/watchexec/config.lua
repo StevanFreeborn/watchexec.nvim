@@ -16,6 +16,10 @@
 ---@field bin? string
 ---@field args? string[]
 
+---@class watchexec.IndicatorPadding
+---@field x? integer
+---@field y? integer
+
 ---@class watchexec.IndicatorPatterns
 ---@field success? string
 ---@field running? string
@@ -27,6 +31,7 @@
 ---@field failure_hl? string
 ---@field width? integer
 ---@field height? integer
+---@field padding? watchexec.IndicatorPadding
 ---@field patterns? watchexec.IndicatorPatterns
 
 ---@class watchexec.Config
@@ -64,6 +69,7 @@ local defaults = {
     failure_hl = "WatchexecFailure",
     width = 2,
     height = 1,
+    padding = { x = 1, y = 1 },
     patterns = {
       success = "%[Command was successful%]",
       running = "%[Running",

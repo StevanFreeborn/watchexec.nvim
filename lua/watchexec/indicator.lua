@@ -35,18 +35,21 @@ local function calculate_position()
   local cfg = config.get().indicator
   local width = cfg.width or 2
   local height = cfg.height or 1
+  local pad_x = cfg.padding and cfg.padding.x or 1
+  local pad_y = cfg.padding and cfg.padding.y or 1
+  local statusline_offset = 2
 
   if cfg.position == "bottom-left" then
-    return vim.o.lines - height - 3, 0
+    return vim.o.lines - height - statusline_offset, pad_x
   elseif cfg.position == "bottom-right" then
-    return vim.o.lines - height - 3, vim.o.columns - width
+    return vim.o.lines - height - statusline_offset, vim.o.columns - width - pad_x
   elseif cfg.position == "top-left" then
-    return 0, 0
+    return pad_y, pad_x
   elseif cfg.position == "top-right" then
-    return 0, vim.o.columns - width
+    return pad_y, vim.o.columns - width - pad_x
   end
 
-  return vim.o.lines - height - 3, 0
+  return vim.o.lines - height - statusline_offset, pad_x
 end
 
 local function close_float()
