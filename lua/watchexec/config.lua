@@ -69,7 +69,7 @@ local defaults = {
     failure_hl = "WatchexecFailure",
     width = 2,
     height = 1,
-    padding = { x = 1, y = 1 },
+    padding = { x = 1, y = 3 },
     patterns = {
       success = "%[Command was successful%]",
       running = "%[Running",

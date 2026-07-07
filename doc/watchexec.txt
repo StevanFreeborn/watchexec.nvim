@@ -187,7 +187,7 @@ indicator (table|nil) ~
 
     y (integer|nil) ~
       Vertical offset from the top or bottom edge.
-      Default: 1
+      Default: 3
 
   patterns (table|nil) ~
     Lua patterns for detecting command lifecycle in output.
