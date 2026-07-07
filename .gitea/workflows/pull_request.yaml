@@ -31,5 +31,7 @@ jobs:
         run: stylua --check .
       - name: Lint
         run: lua-language-server --check=.
+      - name: Bootstrap plenary.nvim
+        run: git clone --depth 1 https://github.com/nvim-lua/plenary.nvim .tests/vendor/plenary.nvim
       - name: Test
         run: nvim --headless -c "PlenaryBustedDirectory tests/watchexec/ {minimal_init = 'tests/minimal_init.lua'}" -c "q"
