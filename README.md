@@ -7,15 +7,12 @@ split window.
 ## Features
 
 - **Floating or split** output window, configurable per-user.
-- **Status indicator** — a small non-focusable float that shows success or
-  failure when the main window is hidden.
+- **Status indicator** — a small non-focusable float that shows success or failure when the main window is hidden.
 - **ANSI escape sequence stripping** so output is clean.
-- **Keyword highlighting** via `DiagnosticError`, `DiagnosticWarn`, and
-  `DiagnosticOk` for error/warning/success keywords in output.
+- **Keyword highlighting** via `DiagnosticError`, `DiagnosticWarn`, and `DiagnosticOk` for error/warning/success keywords in output.
 - **Auto-scroll** to the latest output, with configurable buffer size limits.
 - **Auto-resize** on `VimResized`, and automatic cleanup on `VimLeavePre`.
-- **Binary auto-discovery** — searches PATH, `~/.cargo/bin`, Homebrew, and
-  WSL locations.
+- **Binary auto-discovery** — searches PATH, `~/.cargo/bin`, Homebrew, and WSL locations.
 
 ## Requirements
 
@@ -24,7 +21,7 @@ split window.
 
 Install the CLI:
 
-```
+```pwsh
 cargo install watchexec
 ```
 
@@ -32,7 +29,8 @@ Or download a prebuilt binary from the [releases page](https://github.com/watche
 
 ## Installation
 
-**lazy.nvim**
+### lazy.nvim
+
 ```lua
 {
   "stevanfreeborn/watchexec.nvim",
@@ -40,7 +38,8 @@ Or download a prebuilt binary from the [releases page](https://github.com/watche
 }
 ```
 
-**packer.nvim**
+### packer.nvim
+
 ```lua
 use {
   "stevanfreeborn/watchexec.nvim",
@@ -50,7 +49,8 @@ use {
 }
 ```
 
-**vim-plug**
+### vim-plug
+
 ```vim
 Plug 'stevanfreeborn/watchexec.nvim'
 lua require("watchexec").setup({})
@@ -60,7 +60,7 @@ lua require("watchexec").setup({})
 
 After installing, restart Neovim and run:
 
-```
+```txt
 :WatchexecRun echo hello
 ```
 
@@ -75,55 +75,55 @@ to close it. Press `<Leader>wxt` to toggle it back.
 
 ### `watchexec` — binary options
 
-| Field   | Type     | Default          | Description |
-|---------|----------|------------------|-------------|
-| `bin`   | `string` | `"watchexec"`    | Path to the watchexec executable. Auto-detected from PATH and common locations. |
-| `args`  | `table`  | `{}`             | Extra arguments passed to watchexec before the user command. |
+| Field  | Type     | Default       | Description                                                                     |
+|--------|----------|---------------|---------------------------------------------------------------------------------|
+| `bin`  | `string` | `"watchexec"` | Path to the watchexec executable. Auto-detected from PATH and common locations. |
+| `args` | `table`  | `{}`          | Extra arguments passed to watchexec before the user command.                    |
 
 ### `window` — output window options
 
-| Field    | Type                 | Default      | Description |
-|----------|----------------------|--------------|-------------|
-| `type`   | `"float"` / `"split"` | `"float"`    | Window type. |
-| `split`  | `"below"` / `"above"` / `"left"` / `"right"` | `"below"` | Split direction (only used when `type` is `"split"`). |
-| `size`   | `integer`           | `12`         | Split window size in rows/columns. |
-| `border` | `string` / `table`  | `"single"`   | Border style for floats (see `:help nvim_open_win()`). |
-| `float`  | `table`             | *(see below)* | Float geometry. |
+| Field    | Type                                         | Default       | Description                                            |
+|----------|----------------------------------------------|---------------|--------------------------------------------------------|
+| `type`   | `"float"` / `"split"`                        | `"float"`     | Window type.                                           |
+| `split`  | `"below"` / `"above"` / `"left"` / `"right"` | `"below"`     | Split direction (only used when `type` is `"split"`).  |
+| `size`   | `integer`                                    | `12`          | Split window size in rows/columns.                     |
+| `border` | `string` / `table`                           | `"single"`    | Border style for floats (see `:help nvim_open_win()`). |
+| `float`  | `table`                                      | *(see below)* | Float geometry.                                        |
 
 #### `window.float` — float geometry
 
-| Field      | Type     | Default      | Description |
-|------------|----------|--------------|-------------|
-| `relative` | `string` | `"editor"`   | Positioning anchor. |
-| `width`    | `number` | `0.8`        | Width in columns (values <= 1 are fractions of editor width). |
-| `height`   | `number` | `0.6`        | Height in rows (values <= 1 are fractions of editor height). |
-| `row`      | `number` | `0.5`        | Row position (values <= 1 are fractions). |
-| `col`      | `number` | `0.5`        | Column position (values <= 1 are fractions). |
+| Field      | Type     | Default    | Description                                                   |
+|------------|----------|------------|---------------------------------------------------------------|
+| `relative` | `string` | `"editor"` | Positioning anchor.                                           |
+| `width`    | `number` | `0.8`      | Width in columns (values <= 1 are fractions of editor width). |
+| `height`   | `number` | `0.6`      | Height in rows (values <= 1 are fractions of editor height).  |
+| `row`      | `number` | `0.5`      | Row position (values <= 1 are fractions).                     |
+| `col`      | `number` | `0.5`      | Column position (values <= 1 are fractions).                  |
 
 ### `indicator` — status indicator options
 
-| Field        | Type                                          | Default             | Description |
-|--------------|-----------------------------------------------|---------------------|-------------|
-| `enabled`    | `boolean`                                     | `true`              | Enable/disable the indicator. |
-| `position`   | `"bottom-left"` / `"bottom-right"` / `"top-left"` / `"top-right"` | `"bottom-right"` | Screen corner. |
-| `success_hl` | `string`                                      | `"WatchexecSuccess"` | Highlight for success state. |
-| `failure_hl` | `string`                                      | `"WatchexecFailure"` | Highlight for failure state. |
-| `width`      | `integer`                                     | `2`                 | Indicator width in cells. |
-| `height`     | `integer`                                     | `1`                 | Indicator height in cells. |
-| `patterns`   | `table`                                       | *(see below)*       | Lua patterns for parsing output. |
+| Field        | Type                                                              | Default              | Description                      |
+|--------------|-------------------------------------------------------------------|----------------------|----------------------------------|
+| `enabled`    | `boolean`                                                         | `true`               | Enable/disable the indicator.    |
+| `position`   | `"bottom-left"` / `"bottom-right"` / `"top-left"` / `"top-right"` | `"bottom-right"`     | Screen corner.                   |
+| `success_hl` | `string`                                                          | `"WatchexecSuccess"` | Highlight for success state.     |
+| `failure_hl` | `string`                                                          | `"WatchexecFailure"` | Highlight for failure state.     |
+| `width`      | `integer`                                                         | `2`                  | Indicator width in cells.        |
+| `height`     | `integer`                                                         | `1`                  | Indicator height in cells.       |
+| `patterns`   | `table`                                                           | *(see below)*        | Lua patterns for parsing output. |
 
 #### `indicator.patterns`
 
-| Field     | Type     | Default                     | Description |
-|-----------|----------|-----------------------------|-------------|
+| Field     | Type     | Default                        | Description                                 |
+|-----------|----------|--------------------------------|---------------------------------------------|
 | `success` | `string` | `"%[Command was successful%]"` | Pattern matching successful command output. |
-| `running` | `string` | `"%[Running"`               | Pattern matching command start. |
+| `running` | `string` | `"%[Running"`                  | Pattern matching command start.             |
 
 ### General options
 
-| Field         | Type      | Default | Description |
-|---------------|-----------|---------|-------------|
-| `auto_scroll` | `boolean` | `true`  | Scroll to bottom on new output. |
+| Field         | Type      | Default | Description                                          |
+|---------------|-----------|---------|------------------------------------------------------|
+| `auto_scroll` | `boolean` | `true`  | Scroll to bottom on new output.                      |
 | `max_lines`   | `integer` | `5000`  | Maximum lines in the output buffer (oldest trimmed). |
 
 ### Full config example
@@ -150,28 +150,29 @@ require("watchexec").setup({
 
 ## Commands
 
-| Command | Description |
-|---------|-------------|
+| Command                   | Description                                                                                       |
+|---------------------------|---------------------------------------------------------------------------------------------------|
 | `:WatchexecRun {command}` | Start watchexec with the given shell command. Stops any previous run and opens the output window. |
-| `:WatchexecStop` | Stop the currently running watchexec process and clear the output. |
-| `:WatchexecToggle` | Toggle the output window. |
+| `:WatchexecStop`          | Stop the currently running watchexec process and clear the output.                                |
+| `:WatchexecToggle`        | Toggle the output window.                                                                         |
 
 ## Keymaps
 
-| Keymap         | Action | Description |
-|----------------|--------|-------------|
-| `<Leader>wxt`  | `:WatchexecToggle` | Toggle the output window. |
-| `<Leader>wxs`  | `:WatchexecStop` | Stop the running process. |
-| `<Leader>wxr`  | `:WatchexecRun`  | Prompt for a command and run it. |
+| Keymap        | Action             | Description                      |
+|---------------|--------------------|----------------------------------|
+| `<Leader>wxt` | `:WatchexecToggle` | Toggle the output window.        |
+| `<Leader>wxs` | `:WatchexecStop`   | Stop the running process.        |
+| `<Leader>wxr` | `:WatchexecRun`    | Prompt for a command and run it. |
 
 ## Highlight Groups
 
-| Group | Default | Description |
-|-------|---------|-------------|
+| Group              | Default         | Description                                           |
+|--------------------|-----------------|-------------------------------------------------------|
 | `WatchexecSuccess` | `guibg=#00ff00` | Indicator background when the last command succeeded. |
-| `WatchexecFailure` | `guibg=#ff0000` | Indicator background when the last command failed. |
+| `WatchexecFailure` | `guibg=#ff0000` | Indicator background when the last command failed.    |
 
 Output lines are also highlighted using built-in diagnostic groups:
+
 - `DiagnosticError` — for error, fail, fatal keywords
 - `DiagnosticWarn`  — for warning keywords
 - `DiagnosticOk`    — for success, passed, ok keywords
@@ -194,7 +195,7 @@ require("watchexec").toggle()
 
 Full help is available in Neovim:
 
-```
+```txt
 :help watchexec
 ```
 
