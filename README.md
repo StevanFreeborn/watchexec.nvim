@@ -33,7 +33,7 @@ Or download a prebuilt binary from the [releases page](https://github.com/watche
 
 ```lua
 {
-  "stevanfreeborn/watchexec.nvim",
+  "StevanFreeborn/watchexec.nvim",
   opts = {},
 }
 ```
@@ -42,7 +42,7 @@ Or download a prebuilt binary from the [releases page](https://github.com/watche
 
 ```lua
 use {
-  "stevanfreeborn/watchexec.nvim",
+  "StevanFreeborn/watchexec.nvim",
   config = function()
     require("watchexec").setup({})
   end,
@@ -52,7 +52,7 @@ use {
 ### vim-plug
 
 ```vim
-Plug 'stevanfreeborn/watchexec.nvim'
+Plug 'StevanFreeborn/watchexec.nvim'
 lua require("watchexec").setup({})
 ```
 
