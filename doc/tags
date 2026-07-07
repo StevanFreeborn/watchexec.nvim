@@ -19,6 +19,7 @@ watchexec-wxt	watchexec.txt	/*watchexec-wxt*
 watchexec.Config	watchexec.txt	/*watchexec.Config*
 watchexec.Config.auto_scroll	watchexec.txt	/*watchexec.Config.auto_scroll*
 watchexec.Config.indicator	watchexec.txt	/*watchexec.Config.indicator*
+watchexec.Config.indicator.padding	watchexec.txt	/*watchexec.Config.indicator.padding*
 watchexec.Config.indicator.patterns	watchexec.txt	/*watchexec.Config.indicator.patterns*
 watchexec.Config.max_lines	watchexec.txt	/*watchexec.Config.max_lines*
 watchexec.Config.watchexec	watchexec.txt	/*watchexec.Config.watchexec*

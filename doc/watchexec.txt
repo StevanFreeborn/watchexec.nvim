@@ -177,6 +177,18 @@ indicator (table|nil) ~
     Height of the indicator in screen cells.
     Default: 1
 
+  padding (table|nil) ~
+                                        *watchexec.Config.indicator.padding*
+    Offset from the editor edges. Each value is a number of screen cells.
+
+    x (integer|nil) ~
+      Horizontal offset from the left or right edge.
+      Default: 1
+
+    y (integer|nil) ~
+      Vertical offset from the top or bottom edge.
+      Default: 1
+
   patterns (table|nil) ~
     Lua patterns for detecting command lifecycle in output.
                                    *watchexec.Config.indicator.patterns*
