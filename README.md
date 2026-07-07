@@ -1,18 +1,18 @@
 # watchexec.nvim
 
 Integrate the [watchexec](https://github.com/watchexec/watchexec) CLI into
-Neovim — run file-watching commands and view their output in a floating or
+Neovim - run file-watching commands and view their output in a floating or
 split window.
 
 ## Features
 
 - **Floating or split** output window, configurable per-user.
-- **Status indicator** — a small non-focusable float that shows success or failure when the main window is hidden.
+- **Status indicator** - a small non-focusable float that shows success or failure when the main window is hidden.
 - **ANSI escape sequence stripping** so output is clean.
 - **Keyword highlighting** via `DiagnosticError`, `DiagnosticWarn`, and `DiagnosticOk` for error/warning/success keywords in output.
 - **Auto-scroll** to the latest output, with configurable buffer size limits.
 - **Auto-resize** on `VimResized`, and automatic cleanup on `VimLeavePre`.
-- **Binary auto-discovery** — searches PATH, `~/.cargo/bin`, Homebrew, and WSL locations.
+- **Binary auto-discovery** - searches PATH, `~/.cargo/bin`, Homebrew, and WSL locations.
 
 ## Requirements
 
@@ -73,14 +73,14 @@ to close it. Press `<Leader>wxt` to toggle it back.
 
 `setup()` accepts an optional table with the following fields:
 
-### `watchexec` — binary options
+### `watchexec` - binary options
 
 | Field  | Type     | Default       | Description                                                                     |
 |--------|----------|---------------|---------------------------------------------------------------------------------|
 | `bin`  | `string` | `"watchexec"` | Path to the watchexec executable. Auto-detected from PATH and common locations. |
 | `args` | `table`  | `{}`          | Extra arguments passed to watchexec before the user command.                    |
 
-### `window` — output window options
+### `window` - output window options
 
 | Field    | Type                                         | Default       | Description                                            |
 |----------|----------------------------------------------|---------------|--------------------------------------------------------|
@@ -90,7 +90,7 @@ to close it. Press `<Leader>wxt` to toggle it back.
 | `border` | `string` / `table`                           | `"single"`    | Border style for floats (see `:help nvim_open_win()`). |
 | `float`  | `table`                                      | *(see below)* | Float geometry.                                        |
 
-#### `window.float` — float geometry
+#### `window.float` - float geometry
 
 | Field      | Type     | Default    | Description                                                   |
 |------------|----------|------------|---------------------------------------------------------------|
@@ -100,7 +100,7 @@ to close it. Press `<Leader>wxt` to toggle it back.
 | `row`      | `number` | `0.5`      | Row position (values <= 1 are fractions).                     |
 | `col`      | `number` | `0.5`      | Column position (values <= 1 are fractions).                  |
 
-### `indicator` — status indicator options
+### `indicator` - status indicator options
 
 | Field        | Type                                                              | Default              | Description                      |
 |--------------|-------------------------------------------------------------------|----------------------|----------------------------------|
@@ -174,9 +174,9 @@ require("watchexec").setup({
 
 Output lines are also highlighted using built-in diagnostic groups:
 
-- `DiagnosticError` — for error, fail, fatal keywords
-- `DiagnosticWarn`  — for warning keywords
-- `DiagnosticOk`    — for success, passed, ok keywords
+- `DiagnosticError` - for error, fail, fatal keywords
+- `DiagnosticWarn`  - for warning keywords
+- `DiagnosticOk`    - for success, passed, ok keywords
 
 ## API
 
