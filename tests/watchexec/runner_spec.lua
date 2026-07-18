@@ -223,7 +223,6 @@ describe("watchexec runner", function()
       assert.is_false(overwrite)
     end)
 
-
     it("does not detect overwrite on CRLF that starts with \\r", function()
       local _, overwrite = runner._normalize_output("\r\nxyz")
 

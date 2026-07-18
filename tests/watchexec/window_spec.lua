@@ -304,7 +304,7 @@ describe("watchexec window", function()
       local buf = window.get_buf()
       local maps = vim.api.nvim_buf_get_keymap(buf, "n")
       local found = false
-      
+
       for _, m in ipairs(maps) do
         if m.lhs == "<Esc>" then
           found = true

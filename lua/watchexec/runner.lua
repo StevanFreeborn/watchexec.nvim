@@ -30,7 +30,7 @@ local state = {
 ---@return string
 local function strip_ansi(text)
   local result =
-      text:gsub("\x1b%[%??[0-9;]*[a-zA-Z]", ""):gsub("\x1b%][0-9;]*.-(\x1b\\|\x07)", ""):gsub("\x1b[()][0-9A-Za-z]", "")
+    text:gsub("\x1b%[%??[0-9;]*[a-zA-Z]", ""):gsub("\x1b%][0-9;]*.-(\x1b\\|\x07)", ""):gsub("\x1b[()][0-9A-Za-z]", "")
 
   return result
 end
@@ -46,7 +46,7 @@ local function normalize_output(text)
 
   text = text:gsub("\r\n", "\n")
   text =
-      text:gsub("\x1b%[%??[0-9;]*[a-zA-Z]", ""):gsub("\x1b%][0-9;]*.-(\x1b\\|\x07)", ""):gsub("\x1b[()][0-9A-Za-z]", "")
+    text:gsub("\x1b%[%??[0-9;]*[a-zA-Z]", ""):gsub("\x1b%][0-9;]*.-(\x1b\\|\x07)", ""):gsub("\x1b[()][0-9A-Za-z]", "")
 
   local start_cr = text:len() > 0 and text:byte(1) == 0x0D
 
@@ -80,17 +80,17 @@ end
 ---@param line string
 local function apply_highlights(buf, line_idx, line)
   for _, p in ipairs({
-    { p = "[Ee][Rr][Rr][Oo][Rr]",         h = "DiagnosticError" },
-    { p = "[Ff][Aa][Ii][Ll][Ee][Dd]?",    h = "DiagnosticError" },
-    { p = "[Ee][Rr][Rr]!",                h = "DiagnosticError" },
-    { p = "[Ff][Aa][Tt][Aa][Ll]",         h = "DiagnosticError" },
+    { p = "[Ee][Rr][Rr][Oo][Rr]", h = "DiagnosticError" },
+    { p = "[Ff][Aa][Ii][Ll][Ee][Dd]?", h = "DiagnosticError" },
+    { p = "[Ee][Rr][Rr]!", h = "DiagnosticError" },
+    { p = "[Ff][Aa][Tt][Aa][Ll]", h = "DiagnosticError" },
     { p = "[Ww][Aa][Rr][Nn][Ii][Nn][Gg]", h = "DiagnosticWarn" },
-    { p = "[Ww][Aa][Rr][Nn]!",            h = "DiagnosticWarn" },
+    { p = "[Ww][Aa][Rr][Nn]!", h = "DiagnosticWarn" },
     { p = "[Ss][Uu][Cc][Cc][Ee][Ss][Ss]", h = "DiagnosticOk" },
-    { p = "[Pp][Aa][Ss][Ss][Ee][Dd]",     h = "DiagnosticOk" },
-    { p = "%^%d+ .-[Ss]ucceed",           h = "DiagnosticOk" },
-    { p = "%[ok%]",                       h = "DiagnosticOk" },
-    { p = "[Oo][Kk]!",                    h = "DiagnosticOk" },
+    { p = "[Pp][Aa][Ss][Ss][Ee][Dd]", h = "DiagnosticOk" },
+    { p = "%^%d+ .-[Ss]ucceed", h = "DiagnosticOk" },
+    { p = "%[ok%]", h = "DiagnosticOk" },
+    { p = "[Oo][Kk]!", h = "DiagnosticOk" },
   }) do
     local s, e = line:find(p.p)
 
