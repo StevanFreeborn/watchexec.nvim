@@ -25,6 +25,7 @@ local state = {
 ---@return integer buf
 function M.create_buf()
   local existing = state.buf
+
   if existing and vim.api.nvim_buf_is_valid(existing) then
     return existing
   end
@@ -155,10 +156,13 @@ end
 
 ---Append text to the output buffer.
 ---On first append, replaces the "waiting for output" placeholder.
+---When overwrite is true and the buffer has content, replaces the last line
+---instead of appending (handles \\r-based progress overwrites).
 ---Truncates the buffer when max_lines is exceeded.
 ---Auto-scrolls to the bottom when enabled.
 ---@param text string
-function M.append(text)
+---@param overwrite boolean|nil
+function M.append(text, overwrite)
   local buf = state.buf
 
   if not buf or not vim.api.nvim_buf_is_valid(buf) then
@@ -174,6 +178,8 @@ function M.append(text)
 
   if first_line:match("^ No job running") then
     vim.api.nvim_buf_set_lines(buf, 0, -1, false, lines)
+  elseif overwrite and current > 0 then
+    vim.api.nvim_buf_set_lines(buf, current - 1, -1, false, lines)
   else
     vim.api.nvim_buf_set_lines(buf, current, -1, false, lines)
   end

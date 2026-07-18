@@ -254,6 +254,48 @@ describe("watchexec window", function()
 
       assert.equals(line_count, cursor[1])
     end)
+
+    it("overwrite replaces the last line", function()
+      window.open()
+      local buf = window.get_buf()
+
+      window.append("first")
+      window.append("second")
+      window.append("replacement", true)
+
+      local lines = vim.api.nvim_buf_get_lines(buf, 0, -1, false)
+
+      assert.equals(2, #lines)
+      assert.equals("first", lines[1])
+      assert.equals("replacement", lines[2])
+    end)
+
+    it("overwrite with multiple lines replaces last line and appends", function()
+      window.open()
+      local buf = window.get_buf()
+
+      window.append("first")
+      window.append("second")
+      window.append("replacement1\nreplacement2", true)
+
+      local lines = vim.api.nvim_buf_get_lines(buf, 0, -1, false)
+
+      assert.equals(3, #lines)
+      assert.equals("first", lines[1])
+      assert.equals("replacement1", lines[2])
+      assert.equals("replacement2", lines[3])
+    end)
+
+    it("overwrite on empty buffer appends normally", function()
+      window.open()
+      local buf = window.get_buf()
+
+      window.append("first", true)
+
+      local lines = vim.api.nvim_buf_get_lines(buf, 0, -1, false)
+
+      assert.equals("first", lines[1])
+    end)
   end)
 
   describe("keymaps", function()
@@ -262,12 +304,14 @@ describe("watchexec window", function()
       local buf = window.get_buf()
       local maps = vim.api.nvim_buf_get_keymap(buf, "n")
       local found = false
+      
       for _, m in ipairs(maps) do
         if m.lhs == "<Esc>" then
           found = true
           break
         end
       end
+
       assert.is_true(found)
     end)
 
@@ -276,12 +320,14 @@ describe("watchexec window", function()
       local buf = window.get_buf()
       local maps = vim.api.nvim_buf_get_keymap(buf, "n")
       local found = false
+
       for _, m in ipairs(maps) do
         if m.lhs == "q" then
           found = true
           break
         end
       end
+
       assert.is_true(found)
     end)
 

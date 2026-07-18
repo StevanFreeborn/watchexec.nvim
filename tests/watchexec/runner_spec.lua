@@ -186,6 +186,58 @@ describe("watchexec runner", function()
     end)
   end)
 
+  describe("normalize_output", function()
+    it("removes ANSI sequences", function()
+      local result = runner._strip_ansi("\x1b[31mred\x1b[0m")
+
+      assert.equals("red", result)
+    end)
+
+    it("converts \\r\\n to \\n", function()
+      local result, _ = runner._normalize_output("line1\r\nline2\r\nline3")
+
+      assert.equals("line1\nline2\nline3", result)
+    end)
+
+    it("resolves inline overwrites (\\r splits)", function()
+      local result, _ = runner._normalize_output("a\rb\rc")
+
+      assert.equals("c", result)
+    end)
+
+    it("resolves mixed inline and line (\\r in last line)", function()
+      local result, _ = runner._normalize_output("a\rb\nc\rd")
+
+      assert.equals("b\nd", result)
+    end)
+
+    it("detects leading overwrite", function()
+      local _, overwrite = runner._normalize_output("\rxyz")
+
+      assert.is_true(overwrite)
+    end)
+
+    it("does not detect overwrite on normal text", function()
+      local _, overwrite = runner._normalize_output("xyz")
+
+      assert.is_false(overwrite)
+    end)
+
+
+    it("does not detect overwrite on CRLF that starts with \\r", function()
+      local _, overwrite = runner._normalize_output("\r\nxyz")
+
+      assert.is_false(overwrite)
+    end)
+
+    it("handles empty text", function()
+      local result, overwrite = runner._normalize_output("")
+
+      assert.equals("", result)
+      assert.is_false(overwrite)
+    end)
+  end)
+
   describe("on_exit guard", function()
     it("ignores stale on_exit from replaced job", function()
       local call_count = 0
