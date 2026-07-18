@@ -35,6 +35,44 @@ local function strip_ansi(text)
   return result
 end
 
+---Normalize output text: strip ANSI, handle \\r characters (CRLF -> LF,
+---inline progress overwrites), and detect leading \\r for line overwrite.
+---@param text string
+---@return string, boolean
+local function normalize_output(text)
+  if not text or text == "" then
+    return "", false
+  end
+
+  text = text:gsub("\r\n", "\n")
+  text =
+    text:gsub("\x1b%[%??[0-9;]*[a-zA-Z]", ""):gsub("\x1b%][0-9;]*.-(\x1b\\|\x07)", ""):gsub("\x1b[()][0-9A-Za-z]", "")
+
+  local start_cr = text:len() > 0 and text:byte(1) == 0x0D
+
+  local lines = vim.split(text, "\n", { plain = true })
+  local out_lines = {}
+
+  for i = 1, #lines do
+    local current = lines[i]
+    local found = false
+
+    for p = #current, 1, -1 do
+      if current:byte(p) == 0x0D then
+        current = current:sub(p + 1)
+        found = true
+        break
+      end
+    end
+
+    if not found or current ~= "" then
+      table.insert(out_lines, current)
+    end
+  end
+
+  return table.concat(out_lines, "\n"), start_cr
+end
+
 ---Apply diagnostic highlights to keywords found in a line.
 ---Matches error, warning, success patterns using case-insensitive patterns.
 ---@param buf integer
@@ -69,9 +107,13 @@ local function process_data(text)
     return
   end
 
-  local clean = strip_ansi(text)
+  local clean, overwrite = normalize_output(text)
 
-  require("watchexec.window").append(clean)
+  if clean == "" then
+    return
+  end
+
+  require("watchexec.window").append(clean, overwrite)
   require("watchexec.indicator").process_output(clean)
   require("watchexec.indicator").refresh()
 
@@ -159,7 +201,7 @@ function M.start(command)
     on_stderr = function(_, data, _)
       vim.schedule(function()
         local text = table.concat(data, "\n")
-        local clean = strip_ansi(text)
+        local clean, _ = normalize_output(text)
 
         if clean ~= "" then
           process_data(clean)
@@ -227,5 +269,8 @@ end
 function M.get_cmd()
   return state.cmd
 end
+
+M._normalize_output = normalize_output
+M._strip_ansi = strip_ansi
 
 return M
